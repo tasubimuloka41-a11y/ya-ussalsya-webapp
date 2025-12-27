@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔥 Я УССАЛСЯ - Себастьян БОТ</title>
+    <title>🔥 Я УССАЛСЯ - Админ Панель</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -15,118 +15,242 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
+            padding: 20px;
+            overflow-x: hidden;
         }
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(45deg, #ff0080, #ff8c00, #40e0d0, #ff0080);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-            opacity: 0.6;
-            z-index: -1;
-        }
-        .container {
+
+        .header {
             text-align: center;
-            z-index: 10;
-            max-width: 600px;
-            padding: 40px 20px;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.8s ease;
         }
-        h1 {
-            font-size: 3rem;
-            text-shadow: 0 0 20px rgba(255,255,255,0.5);
-            animation: pulse 2s infinite;
+
+        .header h1 {
+            font-size: 2.5em;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .emoji-line {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease;
+        }
+
+        .form-group {
             margin-bottom: 20px;
         }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        .emoji {
-            font-size: 4rem;
-            animation: bounce 1s infinite;
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-        .btn {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid white;
-            color: white;
-            padding: 15px 40px;
-            font-size: 1.2rem;
+
+        label {
+            display: block;
             font-weight: bold;
-            border-radius: 50px;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
             cursor: pointer;
-            margin: 10px;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
         }
-        .btn:hover {
-            background: white;
-            color: #667eea;
-            transform: scale(1.1);
-            box-shadow: 0 10px 30px rgba(255,255,255,0.5);
+
+        .btn-post {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
         }
+
+        .btn-post:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn-preview {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-preview:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .status.success {
+            background: rgba(76, 175, 80, 0.3);
+            border: 2px solid #4CAF50;
+        }
+
+        .status.error {
+            background: rgba(244, 67, 54, 0.3);
+            border: 2px solid #f44336;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .fire {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255,255,255,0.8);
-            border-radius: 50%;
-            animation: float 3s infinite;
+            display: inline-block;
+            animation: flicker 1.5s infinite;
         }
-        @keyframes float {
-            0% { opacity: 0; transform: translateY(0); }
-            50% { opacity: 1; }
-            100% { opacity: 0; transform: translateY(-100vh); }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="emoji">🔥💀🤖</div>
-        <h1>Я УССАЛСЯ</h1>
-        <p style="font-size: 1.5rem; margin: 20px 0;">Себастьян - дерзкий бот с района</p>
-        <button class="btn" onclick="openBot()">🤖 Открыть БОТ</button>
-        <button class="btn" onclick="openChannel()">📢 Канал "Я УССАЛСЯ"</button>
-                <div style="margin-top: 40px; max-width: 600px; width: 100%;">
-            <h2 style="margin-bottom: 20px;">💬 ЧАТ КАНАЛА</h2>
-            <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-discussion="test_ybiytsa_ussa/3" data-comments-limit="15" data-colorful="1" data-dark="1" data-height="500"></script>
+    <div class="header">
+        <div class="emoji-line">
+            <span class="fire">🔥</span> 💀 🤖
         </div>
+        <h1>Я УССАЛСЯ</h1>
+        <p>Админ Панель Канала</p>
     </div>
+
+    <div class="container">
+        <form id="postForm">
+            <div class="form-group">
+                <label for="postText">📝 Текст поста:</label>
+                <textarea id="postText" placeholder="Напиши что-нибудь дерзкое..." required></textarea>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn-preview" onclick="previewPost()">👁 Превью</button>
+                <button type="submit" class="btn-post">🚀 Запостить</button>
+            </div>
+        </form>
+
+        <div id="status" class="status"></div>
+    </div>
+
     <script>
-        // Создание анимированных частиц
-        function createParticles() {
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'fire';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 3 + 's';
-                document.body.appendChild(particle);
-            }
-        }
-        createParticles();
-        
-        function openBot() {
-            window.Telegram.WebApp.openTelegramLink('https://t.me/popizdetsai_bot');
-        }
-        function openChannel() {
-            window.Telegram.WebApp.openTelegramLink('https://t.me/test_ybiytsa_ussa');
-        }
-        
         // Инициализация Telegram WebApp
-        window.Telegram.WebApp.ready();
-        window.Telegram.WebApp.expand();
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        // ID канала
+        const CHANNEL_ID = '@test_ybiytsa_ussa';
+
+        // Обработка отправки формы
+        document.getElementById('postForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const postText = document.getElementById('postText').value;
+            const statusDiv = document.getElementById('status');
+            
+            // Показываем статус загрузки
+            showStatus('⏳ Отправляем пост...', 'success');
+            
+            try {
+                // Отправляем данные боту через Telegram WebApp
+                tg.sendData(JSON.stringify({
+                    action: 'post_to_channel',
+                    text: postText,
+                    channel: CHANNEL_ID
+                }));
+                
+                showStatus('✅ Пост успешно опубликован!', 'success');
+                document.getElementById('postText').value = '';
+                
+                // Закрываем WebApp через 2 секунды
+                setTimeout(() => {
+                    tg.close();
+                }, 2000);
+                
+            } catch (error) {
+                showStatus('❌ Ошибка: ' + error.message, 'error');
+            }
+        });
+
+        function previewPost() {
+            const postText = document.getElementById('postText').value;
+            if (!postText) {
+                showStatus('⚠️ Сначала напиши текст!', 'error');
+                return;
+            }
+            
+            // Показываем превью
+            showStatus('📝 Превью поста:\n\n' + postText, 'success');
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = 'status ' + type;
+            statusDiv.style.display = 'block';
+            
+            // Автоскрытие через 5 секунд
+            setTimeout(() => {
+                if (type === 'success' && message.includes('Превью')) {
+                    statusDiv.style.display = 'none';
+                }
+            }, 5000);
+        }
+
+        // Настройка кнопки Telegram
+        tg.MainButton.text = "🚀 ЗАПОСТИТЬ";
+        tg.MainButton.show();
+        tg.MainButton.onClick(function() {
+            document.getElementById('postForm').dispatchEvent(new Event('submit'));
+        });
     </script>
 </body>
 </html>
